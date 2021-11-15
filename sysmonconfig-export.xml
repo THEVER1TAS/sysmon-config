@@ -588,6 +588,7 @@
 			<TargetFilename condition="contains">\lsass.dmp</TargetFilename> <!-- LSASS process memory dumps -->
 			<TargetFilename condition="contains">\lsass.zip</TargetFilename> <!-- LSASS process memory dumps -->
 			<TargetFilename condition="contains">\lsass_</TargetFilename> <!-- LSASS process memory dumps -->
+			<TargetFilename condition="contains">\lsassdump</TargetFilename> <!-- LSASS process memory dumps -->
 			<TargetFilename condition="contains">\hive_sam_</TargetFilename> <!-- Default output of HiveNightmare / SeriousSAM tools -->
 			<TargetFilename condition="is">C:\windows\temp\sam</TargetFilename> <!-- Default output of HiveNightmare / SeriousSAM tools -->
 			<TargetFilename condition="begin with">C:\Windows\System32\spool\drivers\x64</TargetFilename> <!-- PrinterNight -->
