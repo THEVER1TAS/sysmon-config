@@ -516,6 +516,18 @@
 
 	<RuleGroup name="" groupRelation="or">
 		<ProcessAccess onmatch="exclude">
+			<!-- THOR via Asgard -->
+			<Rule groupRelation="and">
+				<SourceImage condition="being with">C:\Windows\Temp\asgard2-agent\</SourceImage>
+				<SourceImage condition="end with">\thor\thor64.exe</SourceImage>
+			</Rule>
+
+			<!-- Aurora via Asgard -->
+			<Rule groupRelation="and">
+				<SourceImage condition="being with">C:\Windows\Temp\asgard2-agent-sc\aurora\</SourceImage>
+				<SourceImage condition="end with">\aurora-agent-64.exe</SourceImage>
+			</Rule>
+
 			<SourceImage condition="is">C:\Program Files\Aurora-Agent\aurora-agent.exe</SourceImage>
 			<SourceImage condition="is">C:\Program Files\Aurora-Agent\aurora-agent-64.exe</SourceImage>
 		</ProcessAccess>
