@@ -587,12 +587,12 @@
 			<TargetFilename condition="is">C:\windows\temp\sam</TargetFilename> <!-- Default output of HiveNightmare / SeriousSAM tools -->
 			<TargetFilename condition="begin with">C:\Windows\System32\spool\drivers\x64</TargetFilename> <!-- PrinterNight -->
 			<Rule groupRelation="and"> <!-- CVE-2021-40444 https://twitter.com/RonnyTNL/status/1436334640617373699 -->
-			<Image condition="end with">\WINWORD.EXE</Image>
-			<TargetFilename condition="contains any">.cab;.inf</TargetFilename>
+				<Image condition="end with">\WINWORD.EXE</Image>
+				<TargetFilename condition="contains any">.cab;.inf</TargetFilename>
+			</Rule>
 			<!-- AutoIt3 scripts extensions [ https://isc.sans.edu/diary/More+Brazil+malspam+pushing+Astaroth+Guildma+in+January+2023/29404 ] --> 
 			<TargetFilename condition="end with">.au3</TargetFilename>
 			<TargetFilename condition="end with">.a3x</TargetFilename>
-			</Rule>
 		</FileCreate>
 	</RuleGroup>
 
