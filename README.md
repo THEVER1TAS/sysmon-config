@@ -1,6 +1,6 @@
 # sysmon-config | A Sysmon configuration file
 This is a forked and modified version of [@SwiftOnSecurity's](https://twitter.com/SwiftOnSecurity) [sysmon config](https://github.com/SwiftOnSecurity/sysmon-config) and
-a modified version of Neo23x0's [sysmon blocking config](https://github.com/Neo23x0/sysmon-config). This includes all pull requests, updated schema, and additional blocking rules. The `sysmonconfig-export-block-loldrivers.xml` builds upon Neo23x0's config by also including a curated blocking list of malicious [Living Off The Land Windows](https://www.loldrivers.io/) drivers used by adversaries to bypass security controls and carry out attacks.
+a modified version of Neo23x0's [sysmon blocking config](https://github.com/Neo23x0/sysmon-config). This includes all pull requests, updated schema, and additional blocking rules. The `sysmonconfig-export-block-loldrivers.xml` builds upon Neo23x0's config by also including a curated blocking list of malicious [Living Off The Land Windows](https://www.loldrivers.io/) drivers used by adversaries to bypass security controls and carry out attacks. A Linux build is now available for testing!
 
 ## Version & Schema
 The configuration files are for Sysmon 15.0 and newer. Schema version is 4.90 and the binary version is now 18. 
@@ -23,6 +23,7 @@ The configuration files are for Sysmon 15.0 and newer. Schema version is 4.90 an
 ## Configs in this Repository
 This repo includes the original and three additional configurations
 
+- `sysmonconfig-Linux_config.xml` Linux config for Sysmon [Microsoft](https://github.com/microsoft/SysmonForLinux)
 - `sysmonconfig-export.xml` the "OG" config provided by @SwiftOnSecurity
 - `sysmonconfig-export-block-loldrivers.xml` merged with [@magicsword-io LOLDrivers](https://github.com/magicsword-io/LOLDrivers/blob/main/detections/sysmon/sysmon_config_malicious_hashes_block.xml) to block Living Off The Land   Drivers (Malicious Hashes Only) using EventID 27.
 - `sysmonconfig-export-block.xml` the original config provided by @Neo23x0 with some additional advanced blocking rules available since Sysmon v14 (WARNING: use it with care!)
