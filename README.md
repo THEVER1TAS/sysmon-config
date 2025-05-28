@@ -23,7 +23,7 @@ The configuration files are for Sysmon 15.0 and newer. Schema version is 4.90 an
 ## Configs in this Repository
 This repo includes the original and three additional configurations
 
-- `sysmonconfig-Linux_config.xml` Linux config for Sysmon forked from [Microsoft](https://github.com/microsoft/SysmonForLinux) with addiitonal detections.
+- `sysmonconfig-Linux.xml` Linux config for Sysmon forked from [Microsoft](https://github.com/microsoft/SysmonForLinux) with addiitonal detections.
 - `sysmonconfig-export.xml` the "OG" config provided by @SwiftOnSecurity
 - `sysmonconfig-export-block-loldrivers.xml` merged with [@magicsword-io LOLDrivers](https://github.com/magicsword-io/LOLDrivers/blob/main/detections/sysmon/sysmon_config_malicious_hashes_block.xml) to block Living Off The Land   Drivers (Malicious Hashes Only) using EventID 27.
 - `sysmonconfig-export-block.xml` the original config provided by @Neo23x0 with some additional advanced blocking rules available since Sysmon v14 (WARNING: use it with care!)
