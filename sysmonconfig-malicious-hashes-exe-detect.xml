@@ -801,6 +801,7 @@
 			<Image name="Suspicious,ImageBeginWithBackslash" condition="begin with">\</Image> <!--Devices and VSC shouldn't be executing changes | Credit: @SBousseaden @ionstorm @neu5ron @PerchedSystems [ https://twitter.com/SwiftOnSecurity/status/1133167323991486464 ] -->
 			<TargetObject condition="begin with">HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\</TargetObject> <!--Microsoft:Windows:UAC: Detect malware changes to UAC prompt level-->
 			<TargetObject condition="begin with">HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\</TargetObject> <!--Microsoft:Defender: Detect changes to Defender administrative settings to monitor for disablement-->
+			<TargetObject condition="begin with">HKLM\SOFTWARE\Microsoft\Windows Defender\</TargetObject>
 			<!--Windows trust architecture monitoring | Credit: @mattifestation-->
 			<!--ADDITIONAL REFERENCE: https://specterops.io/assets/resources/SpecterOps_Subverting_Trust_in_Windows.pdf-->
 			<TargetObject condition="contains">Microsoft\Cryptography\OID\</TargetObject> <!-- Important trust registry values to monitor -->
@@ -808,6 +809,9 @@
 			<TargetObject condition="contains">Microsoft\Cryptography\Providers\Trust\</TargetObject> <!-- Important trust registry values to monitor -->
 			<TargetObject condition="contains">WOW6432Node\Microsoft\Cryptography\Providers\Trust\</TargetObject> <!-- Important trust registry values to monitor -->
 			<TargetObject condition="contains">Control\Print\Environments\Windows x64\Drivers</TargetObject> <!-- PrinterNightmare coverage -->
+			<!--RunMRU and TypedPaths monitoring to detect potential clickfixing and filefixing attacks-->
+			<TargetObject condition="contains">\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\RunMRU\</TargetObject>
+			<TargetObject condition="contains">\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths\</TargetObject>
 		</RegistryEvent>
 	</RuleGroup>
 
