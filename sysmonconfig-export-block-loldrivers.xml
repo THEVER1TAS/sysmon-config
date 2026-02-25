@@ -255,7 +255,11 @@
 			<Image condition="image">cmstp.exe</Image> <!--Windows: Connection manager profiles can launch executables from WebDAV [ https://twitter.com/NickTyrer/status/958450014111633408 ] | Credit @NickTyrer @Oddvarmoe @KyleHanslovan @subTee -->
 			<Image condition="image">cscript.exe</Image> <!--WindowsScriptingHost: | Credit @Cyb3rOps [ https://gist.github.com/Neo23x0/a4b4af9481e01e749409 ] -->
 			<Image condition="image">driverquery.exe</Image> <!--Windows: Remote recognisance of system configuration, oudated/vulnerable drivers -->
-			<Image condition="image">dsquery.exe</Image> <!--Microsoft: Query Active Directory -->
+			<Image condition="image">dsquery.exe</Image> <!--Microsoft: Query Active Direcory -->
+			<Image condition="image">ieinstal.exe</Image> <!-- make bloody sure this abomonation (iexplorer) doesnt install -->
+			<Image condition="image">ieinstal.exe.mui</Image>
+			<Image condition="image">ielowutil.exe</Image>
+			<Image condition="image">ExtExport.exe</Image>
 			<Image condition="image">hh.exe</Image> <!--Windows: HTML Help Executable, opens CHM files -->
 			<Image condition="image">infDefaultInstall.exe</Image> <!--Microsoft: [ https://github.com/huntresslabs/evading-autoruns ] | Credit @KyleHanslovan -->
 			<Image condition="image">java.exe</Image> <!--Java: Monitor usage of vulnerable application and init from JAR files | Credit @ion-storm -->
@@ -2562,4 +2566,4 @@
 		<!--COMMENT: This event is generated when Sysmon detects the creation of a new executable file (PE format).-->
 		
 	</EventFiltering>
-</Sysmon>
+</Sysmon>t
