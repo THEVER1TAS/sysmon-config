@@ -111,14 +111,14 @@ Run with administrator rights
 batch
 sysmon.exe -accepteula -i sysmonconfig-export.xml
 
-### Update existing configuration 
+## Update existing configuration 
 
 Run with administrator rights
 
 batch
 sysmon.exe -c sysmonconfig-export.xml
 
-### Uninstall 
+## Uninstall 
 
 Run with administrator rights
 
