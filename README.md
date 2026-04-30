@@ -102,12 +102,25 @@ Please report:
 3. Broken configuration elements such as typos or invalid conditions
 4. Missing detection coverage, preferably in the form of a pull request
 
-## Usage ### Install Run with administrator rights
+## Usage 
+
+### Install 
+
+Run with administrator rights
+
 batch
 sysmon.exe -accepteula -i sysmonconfig-export.xml
-### Update existing configuration Run with administrator rights
+
+### Update existing configuration 
+
+Run with administrator rights
+
 batch
 sysmon.exe -c sysmonconfig-export.xml
-### Uninstall Run with administrator rights
+
+### Uninstall 
+
+Run with administrator rights
+
 batch
 sysmon.exe -u
