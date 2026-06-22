@@ -1,5 +1,5 @@
 <!--
-  sysmonconfig-advanced-public-block.xml
+  sysmonconfig-advanced-public-detection-v3.3.xml
   A Sysmon configuration for high-fidelity detection of advanced adversary behavior
 
   Source project:   https://github.com/SwiftOnSecurity/sysmon-config
