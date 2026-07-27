@@ -3,7 +3,8 @@
   Sysmon for Linux — Advanced Adversary Detection Configuration
 
   MAINTAINED BY:  @THE_VER1TAS
-  LAST CHANGE:    04-29-2026
+  CONTRIBUTIONS:  @tazwake — Linux detection logic and configuration improvements
+  LAST CHANGE:    07-27-2026
   VERSION:        2.0 — triple-checked audit pass; 13 bugs corrected from v1.0
 
   CORRECTIONS IN THIS VERSION:
@@ -26,7 +27,7 @@
    12. FileDelete .log: removed end-with catch-all (logrotate + every app triggers it);
        specific /var/log/* path matches are sufficient
    13. PipedBase64Exec: corrected misleading comment; refined pattern to what Sysmon
-       actually captures in CommandLine for this technique
+       actually captures in CommandLine for this techniquea
 
   REQUIRED:       Sysmon for Linux (https://github.com/microsoft/SysmonForLinux)
                   Schema version 4.81 or higher
@@ -598,6 +599,16 @@
         <Image condition="contains">/proc/</Image>
         <Image condition="contains">/fd/</Image>
       </Rule>
+      <!-- Delete-after-execute prerequisite (T1070.004): process launched from a user-writable
+           or runtime staging path. Correlate this Event ID 1 process path with Event ID 23
+           deletion of the same path to identify /proc/<pid>/exe -> "(deleted)" behavior. -->
+      <Rule name="T1070.004,LinuxDeleteAfterExecute_ProcessFromStagingPath" groupRelation="or">
+        <Image condition="begin with">/tmp/</Image>
+        <Image condition="begin with">/var/tmp/</Image>
+        <Image condition="begin with">/dev/shm/</Image>
+        <Image condition="begin with">/run/</Image>
+        <Image condition="begin with">/home/</Image>
+      </Rule>
       <!-- Inline base64-decoded execution patterns (T1059).
            This catches cases where the CommandLine of the interpreter itself contains the
            decode pattern, e.g.: bash -c "$(echo bWFsd... | base64 -d)"
@@ -718,6 +729,16 @@
         <Image condition="end with">ruby</Image>
       </Rule>
 
+      <!-- Delete-after-execute follow-on network prerequisite (T1070.004/T1071): outbound
+           network activity from processes launched out of staging paths. Correlate with
+           Event ID 1 and Event ID 23 for deleted-running-binary investigations. -->
+      <Rule name="T1070.004,T1071,LinuxDeleteAfterExecute_NetworkFromStagingPath" groupRelation="or">
+        <Image condition="begin with">/tmp/</Image>
+        <Image condition="begin with">/var/tmp/</Image>
+        <Image condition="begin with">/dev/shm/</Image>
+        <Image condition="begin with">/run/</Image>
+        <Image condition="begin with">/home/</Image>
+      </Rule>
       <!-- Suspicious destination ports — C2 commons -->
       <DestinationPort name="Metasploit-Default" condition="is">4444</DestinationPort>
       <DestinationPort name="C2-Alt" condition="is">4443</DestinationPort>
@@ -1016,11 +1037,17 @@
         <TargetFilename condition="end with">.service</TargetFilename>
       </Rule>
 
-      <!-- Staging file cleanup — dropper deletes itself -->
-      <Rule name="T1070,StagingCleanup" groupRelation="or">
+      <!-- Staging file cleanup — dropper deletes itself. Correlate with Event ID 1
+           ProcessCreate from the same path for deleted-running-binary behavior. -->
+      <Rule name="T1070.004,LinuxDeleteAfterExecute_StagingFileDeletion" groupRelation="or">
         <TargetFilename condition="begin with">/tmp/</TargetFilename>
         <TargetFilename condition="begin with">/dev/shm/</TargetFilename>
         <TargetFilename condition="begin with">/var/tmp/</TargetFilename>
+        <TargetFilename condition="begin with">/run/</TargetFilename>
+        <Rule name="T1070.004,LinuxDeleteAfterExecute_HomeExecutableDeletion" groupRelation="and">
+          <TargetFilename condition="begin with">/home/</TargetFilename>
+          <TargetFilename condition="contains any">.elf;.sh;.py;.pl;.rb;.php;.so;</TargetFilename>
+        </Rule>
       </Rule>
 
     </FileDelete>
