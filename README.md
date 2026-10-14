@@ -95,15 +95,20 @@ This configuration is intended for careful testing before production deployment.
 
 #### `sysmonconfig-Linux-advanced.xml`
 
-Advanced Linux Sysmon configuration intended to provide high-signal telemetry for common Linux post-exploitation behaviors.
+Advanced Sysmon for Linux configuration designed to provide high-value endpoint telemetry for Linux threat hunting, detection engineering, and incident response.
 
-This configuration is designed to help defenders identify suspicious Linux activity such as process execution from temporary locations, shell and interpreter activity, suspicious network tooling, file creation in high-risk paths, raw access behavior, and other activity that may support threat hunting or incident response.
+This configuration focuses on Linux behaviors commonly associated with post-exploitation activity, including execution from temporary or user-writable paths, shell and interpreter activity, suspicious network tooling, high-risk file creation and deletion, raw access activity, and staging/persistence paths that are useful during investigations.
 
-This is intended as a practical Linux endpoint telemetry baseline that can be adapted to different Linux server and workstation environments.
+Recent additions expand coverage for Linux-specific tradecraft, including deleted-running-binary behavior, suspicious kernel module activity, eBPF pinned objects under `/sys/fs/bpf/`, and other rootkit-adjacent telemetry. These detections are intended to help defenders identify suspicious staging, execution, persistence, and cleanup activity on Linux systems.
+
+This configuration is not intended to replace EDR, auditd, osquery, or other Linux-native security tooling. It is intended to provide a practical Sysmon-style telemetry baseline that can be forwarded to a SIEM and adapted to different Linux server and workstation environments.
+
+Credit to @tazwake for contributions to the Linux detection logic and configuration improvements.
 
 #### `sysmonconfig-Linux.xml`
 
 Base Linux Sysmon configuration forked from [Microsoft Sysmon for Linux](https://github.com/microsoft/SysmonForLinux) with additional detection logic.
+This configuration provides a lighter starting point for organizations that want basic Linux Sysmon telemetry before moving to the advanced configuration.
 
 ## Driver Monitoring and Blocking Notes
 
