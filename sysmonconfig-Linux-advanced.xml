@@ -2,10 +2,10 @@
   sysmonconfig-Linux-advanced.xml
   Sysmon for Linux — Advanced Adversary Detection Configuration
 
-  MAINTAINED BY:  @THE_VER1TAS
-  CONTRIBUTIONS:  @tazwake — Linux detection logic and configuration improvements
-  LAST CHANGE:    07-27-2026
-  VERSION:        2.0 — triple-checked audit pass; 13 bugs corrected from v1.0
+  CREATED BY:		    @THE_VER1TAS
+  CONTRIBUTIONS:  	@tazwake — Linux detection logic and configuration improvements
+  LAST CHANGE:   	  10-14-2026
+  VERSION:        	2.1 — triple-checked audit pass; 13 bugs corrected from v1.0
 
   CORRECTIONS IN THIS VERSION:
     1. WebShellRecon: replaced unsafe "contains any" on Image field (ip/id/ss matched
@@ -27,7 +27,9 @@
    12. FileDelete .log: removed end-with catch-all (logrotate + every app triggers it);
        specific /var/log/* path matches are sufficient
    13. PipedBase64Exec: corrected misleading comment; refined pattern to what Sysmon
-       actually captures in CommandLine for this techniquea
+       actually captures in CommandLine for this technique
+   14. Rootkit-adjacent telemetry: added kernel module tooling, suspicious .ko staging,
+       eBPF pinned-object create/delete coverage, bpftool usage, and rootkit scanner execution
 
   REQUIRED:       Sysmon for Linux (https://github.com/microsoft/SysmonForLinux)
                   Schema version 4.81 or higher
@@ -52,6 +54,8 @@
     - DNS queries (use auditd or eBPF-based tools for DNS visibility)
     - ICMP / raw socket traffic (use network sensor — Zeek, Suricata)
     - In-memory execution without fork/exec (use auditd for execve hooking)
+    - Kernel-resident rootkits can hide from live host telemetry; use memory capture,
+      offline disk analysis, and trusted tooling when kernel compromise is suspected
 
   COMPLEMENTARY CONTROLS RECOMMENDED:
     - auditd: syscall-level telemetry for open(), read(), ptrace(), mmap()
@@ -635,6 +639,41 @@
   </RuleGroup>
 
   <!-- PROCESS CREATE EXCLUDE — reduce noise from known-benign system processes -->
+
+  <!-- KERNEL MODULE / eBPF / ROOTKIT-ADJACENT TELEMETRY (T1547.006, T1014) -->
+  <!--
+    These rules provide early telemetry around Linux kernel rootkit tradecraft:
+    module load/unload tooling, eBPF enumeration/loading tooling, and rootkit scanner execution.
+    They do not prove kernel integrity. Suspected kernel compromise still requires trusted
+    offline analysis, memory capture, and rebuild from known-good media where appropriate.
+  -->
+  <RuleGroup name="KernelModuleEBPFRootkitTelemetry" groupRelation="or">
+    <ProcessCreate onmatch="include">
+      <!-- Kernel module administration/loading tools (T1547.006) -->
+      <Image name="T1547.006,LinuxKernelModuleTool_insmod" condition="end with">/insmod</Image>
+      <Image name="T1547.006,LinuxKernelModuleTool_modprobe" condition="end with">/modprobe</Image>
+      <Image name="T1547.006,LinuxKernelModuleTool_rmmod" condition="end with">/rmmod</Image>
+      <Image name="T1547.006,LinuxKernelModuleTool_lsmod" condition="end with">/lsmod</Image>
+      <Image name="T1547.006,LinuxKernelModuleTool_modinfo" condition="end with">/modinfo</Image>
+      <Image name="T1547.006,LinuxKernelModuleTool_depmod" condition="end with">/depmod</Image>
+      <Image name="T1547.006,LinuxKernelModuleTool_kmod" condition="end with">/kmod</Image>
+
+      <!-- eBPF tooling. Baseline expected tools such as Falco, Tracee, Tetragon, Cilium, or Kunai. -->
+      <Image name="T1014,LinuxEBPF_bpftool" condition="end with">/bpftool</Image>
+      <CommandLine name="T1014,LinuxEBPF_ProgramEnumeration" condition="contains any">bpftool prog list;bpftool map list;bpftool prog show;bpftool net list</CommandLine>
+
+      <!-- Rootkit scanner execution — useful IR timeline telemetry, not proof of compromise by itself. -->
+      <Image name="T1014,LinuxRootkitScanner_chkrootkit" condition="end with">/chkrootkit</Image>
+      <Image name="T1014,LinuxRootkitScanner_rkhunter" condition="end with">/rkhunter</Image>
+
+      <!-- Common live-response checks for module/rootkit state. Useful for investigation timeline context. -->
+      <CommandLine name="T1014,LinuxKernelStateCheck_ModulesDisabled" condition="contains">/proc/sys/kernel/modules_disabled</CommandLine>
+      <CommandLine name="T1014,LinuxKernelStateCheck_Tainted" condition="contains">/proc/sys/kernel/tainted</CommandLine>
+      <CommandLine name="T1014,LinuxKernelStateCheck_ProcModules" condition="contains">/proc/modules</CommandLine>
+      <CommandLine name="T1014,LinuxKernelStateCheck_SysModule" condition="contains">/sys/module/</CommandLine>
+    </ProcessCreate>
+  </RuleGroup>
+
   <RuleGroup name="ProcessCreateExcludes" groupRelation="or">
     <ProcessCreate onmatch="exclude">
       <!-- Package management — noisy and benign -->
@@ -891,6 +930,23 @@
         <TargetFilename condition="end with">/.zshrc</TargetFilename>
       </Rule>
 
+
+      <!-- Rootkit-adjacent module/eBPF persistence and staging telemetry -->
+      <Rule name="T1547.006,LinuxKernelModuleStagedOutsideModuleTree" groupRelation="and">
+        <TargetFilename condition="contains any">.ko;.ko.xz;.ko.zst;.ko.gz;</TargetFilename>
+        <TargetFilename condition="contains any">/tmp/;/var/tmp/;/dev/shm/;/run/;/home/;/opt/</TargetFilename>
+      </Rule>
+
+      <Rule name="T1547.006,LinuxKernelModulePersistenceConfig" groupRelation="or">
+        <TargetFilename condition="is">/etc/modules</TargetFilename>
+        <TargetFilename condition="begin with">/etc/modules-load.d/</TargetFilename>
+        <TargetFilename condition="begin with">/etc/modprobe.d/</TargetFilename>
+      </Rule>
+
+      <Rule name="T1014,LinuxEBPFPinnedObjectCreate" groupRelation="or">
+        <TargetFilename condition="begin with">/sys/fs/bpf/</TargetFilename>
+      </Rule>
+
       <!-- Kernel module (T1547.006) -->
       <Rule name="T1547.006,KernelModuleFile" groupRelation="or">
         <TargetFilename condition="end with">.ko</TargetFilename>
@@ -1050,6 +1106,19 @@
         </Rule>
       </Rule>
 
+
+
+      <!-- eBPF pinned object deletion — possible cleanup/tampering or controlled IR removal. -->
+      <Rule name="T1070,LinuxEBPFPinnedObjectDelete" groupRelation="or">
+        <TargetFilename condition="begin with">/sys/fs/bpf/</TargetFilename>
+      </Rule>
+
+      <!-- Kernel module persistence config deletion — possible cleanup or persistence removal. -->
+      <Rule name="T1070,LinuxKernelModulePersistenceConfigDeletion" groupRelation="or">
+        <TargetFilename condition="is">/etc/modules</TargetFilename>
+        <TargetFilename condition="begin with">/etc/modules-load.d/</TargetFilename>
+        <TargetFilename condition="begin with">/etc/modprobe.d/</TargetFilename>
+      </Rule>
     </FileDelete>
   </RuleGroup>
 
