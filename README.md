@@ -99,26 +99,15 @@ Advanced Sysmon for Linux configuration designed to improve endpoint visibility,
 
 Detection coverage includes:
 
-Suspicious process execution, shell activity, and network connections
+- Suspicious process execution, shell activity, and network connections
+- Execution from temporary or user-writable directories
+- File creation, deletion, and deleted-running-binary activity
+- Privilege escalation, SUID/SGID changes, and Linux capability manipulation
+- File attribute manipulation using chattr, setfattr, and chmod
+- Persistence mechanisms involving cron, systemd, and SSH
+- Suspicious kernel module activity, eBPF instrumentation, and rootkit-related behavior
 
-Execution from temporary or user-writable directories
-
-File creation, deletion, and deleted-running-binary activity
-
-Privilege escalation, SUID/SGID changes, and Linux capability manipulation
-
-File attribute manipulation using chattr, setfattr, and chmod
-
-Persistence mechanisms involving cron, systemd, and SSH
-
-Suspicious kernel module activity, eBPF instrumentation, and rootkit-related behavior
-
-Intended Audience and Deployment
-
-Designed for SOC analysts, detection engineers, threat hunters, DFIR professionals, and Linux administrators securing enterprise Linux servers and workstations.
-
-The configuration provides a practical telemetry baseline for SIEM integration and security investigations. Organizations should validate compatibility, event volume, and detection coverage before production deployment.
-
+The configuration provides a practical telemetry baseline for SIEM integration and security investigations. Organizations should validate compatibility, event volume, and detection coverage before production deployment. 
 It complements existing EDR, auditd, osquery, and other Linux security controls rather than replacing them.
 
 #### `sysmonconfig-Linux.xml`
