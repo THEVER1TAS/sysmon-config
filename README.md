@@ -95,15 +95,31 @@ This configuration is intended for careful testing before production deployment.
 
 #### `sysmonconfig-Linux-advanced.xml`
 
-Advanced Sysmon for Linux configuration designed to provide high-value endpoint telemetry for Linux threat hunting, detection engineering, and incident response.
+Advanced Sysmon for Linux configuration designed to improve endpoint visibility, threat hunting, detection engineering, and incident response across Linux environments.
 
-This configuration focuses on Linux behaviors commonly associated with post-exploitation activity, including execution from temporary or user-writable paths, shell and interpreter activity, suspicious network tooling, high-risk file creation and deletion, raw access activity, and staging/persistence paths that are useful during investigations.
+Detection coverage includes:
 
-Recent additions expand coverage for Linux-specific tradecraft, including deleted-running-binary behavior, suspicious kernel module activity, eBPF pinned objects under `/sys/fs/bpf/`, and other rootkit-adjacent telemetry. These detections are intended to help defenders identify suspicious staging, execution, persistence, and cleanup activity on Linux systems.
+Suspicious process execution, shell activity, and network connections
 
-This configuration is not intended to replace EDR, auditd, osquery, or other Linux-native security tooling. It is intended to provide a practical Sysmon-style telemetry baseline that can be forwarded to a SIEM and adapted to different Linux server and workstation environments.
+Execution from temporary or user-writable directories
 
-Credit to @tazwake for contributions to the Linux detection logic and configuration improvements.
+File creation, deletion, and deleted-running-binary activity
+
+Privilege escalation, SUID/SGID changes, and Linux capability manipulation
+
+File attribute manipulation using chattr, setfattr, and chmod
+
+Persistence mechanisms involving cron, systemd, and SSH
+
+Suspicious kernel module activity, eBPF instrumentation, and rootkit-related behavior
+
+Intended Audience and Deployment
+
+Designed for SOC analysts, detection engineers, threat hunters, DFIR professionals, and Linux administrators securing enterprise Linux servers and workstations.
+
+The configuration provides a practical telemetry baseline for SIEM integration and security investigations. Organizations should validate compatibility, event volume, and detection coverage before production deployment.
+
+It complements existing EDR, auditd, osquery, and other Linux security controls rather than replacing them.
 
 #### `sysmonconfig-Linux.xml`
 
