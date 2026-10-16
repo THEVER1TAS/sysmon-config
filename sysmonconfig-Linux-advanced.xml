@@ -2,10 +2,10 @@
   sysmonconfig-Linux-advanced.xml
   Sysmon for Linux — Advanced Adversary Detection Configuration
 
-  CREATED BY:		    @THE_VER1TAS
-  CONTRIBUTIONS:  	@tazwake — Linux detection logic and configuration improvements
-  LAST CHANGE:   	  10-14-2026
-  VERSION:        	2.1 — triple-checked audit pass; 13 bugs corrected from v1.0
+  MAINTAINED BY:  @THE_VER1TAS
+  CONTRIBUTIONS:  @tazwake — Linux detection logic and configuration improvements
+  LAST CHANGE:    10-16-2026
+  VERSION:        2.0 — triple-checked audit pass; 13 bugs corrected from v1.0
 
   CORRECTIONS IN THIS VERSION:
     1. WebShellRecon: replaced unsafe "contains any" on Image field (ip/id/ss matched
@@ -30,6 +30,14 @@
        actually captures in CommandLine for this technique
    14. Rootkit-adjacent telemetry: added kernel module tooling, suspicious .ko staging,
        eBPF pinned-object create/delete coverage, bpftool usage, and rootkit scanner execution
+   15. File-attribute manipulation telemetry: chattr immutable/append-only changes,
+       setfattr security attribute writes, and chmod sticky-bit removal commands
+
+  FILE ATTRIBUTE RESEARCH REFERENCE:
+    Halkyn Consulting — Linux File Attributes Attackers Rely On (2026-10-14)
+    https://www.halkynconsulting.co.uk/a/2026/10/linux-file-attributes/
+    Rules inspired by the article; events record utility execution/command lines,
+    NOT proof that a filesystem attribute change succeeded.
 
   REQUIRED:       Sysmon for Linux (https://github.com/microsoft/SysmonForLinux)
                   Schema version 4.81 or higher
@@ -671,6 +679,38 @@
       <CommandLine name="T1014,LinuxKernelStateCheck_Tainted" condition="contains">/proc/sys/kernel/tainted</CommandLine>
       <CommandLine name="T1014,LinuxKernelStateCheck_ProcModules" condition="contains">/proc/modules</CommandLine>
       <CommandLine name="T1014,LinuxKernelStateCheck_SysModule" condition="contains">/sys/module/</CommandLine>
+    </ProcessCreate>
+  </RuleGroup>
+
+  <!-- FILE ATTRIBUTE MANIPULATION (T1222.002) -->
+  <!--
+    Research reference: Halkyn Consulting, "Linux File Attributes Attackers Rely On"
+    https://www.halkynconsulting.co.uk/a/2026/10/linux-file-attributes/
+
+    Detects executions of utilities commonly used to modify Linux file attributes.
+    These are invocation indicators, not syscall-level confirmation of changes.
+    Native syscalls/APIs, scripts invoking them directly, and numeric chmod modes
+    may evade these command-line matches. Auditd/eBPF and baselining are complementary.
+  -->
+  <RuleGroup name="LinuxFileAttributeManipulation" groupRelation="or">
+    <ProcessCreate onmatch="include">
+      <!-- Immutable (+i/-i) and append-only (+a/-a) file flag manipulation. -->
+      <Rule name="T1222.002,LinuxChattrAttributeChange" groupRelation="and">
+        <Image condition="end with">/chattr</Image>
+        <CommandLine condition="contains any">+i;-i;+a;-a;=i;=a</CommandLine>
+      </Rule>
+
+      <!-- Sensitive extended attributes, including capabilities and SELinux context. -->
+      <Rule name="T1222.002,LinuxExtendedAttributeModification" groupRelation="and">
+        <Image condition="end with">/setfattr</Image>
+        <CommandLine condition="contains any">security.capability;security.selinux</CommandLine>
+      </Rule>
+
+      <!-- Explicit sticky-bit removal with symbolic chmod modes (-t or a-t). -->
+      <Rule name="T1222.002,LinuxStickyBitRemoval" groupRelation="and">
+        <Image condition="end with">/chmod</Image>
+        <CommandLine condition="contains">-t</CommandLine>
+      </Rule>
     </ProcessCreate>
   </RuleGroup>
 
