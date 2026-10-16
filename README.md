@@ -81,6 +81,7 @@ This configuration uses **Event ID 29** for malicious LOLDrivers file creation d
 
 **Important:** Event ID 29 detects matching PE file creation on disk. It does not block the file and does not replace driver load monitoring.
 
+
 #### `sysmonconfig-advanced-public-block-v3.3.xml`
 
 Advanced Windows configuration with **blocking enabled** for organizations that want a more aggressive prevention-oriented Sysmon configuration.
@@ -92,6 +93,7 @@ This configuration is intended for careful testing before production deployment.
 **Important:** Event ID 27 blocks matching PE file creation by hash. Event ID 29 detects matching PE file creation. These events are useful for malicious and vulnerable driver file activity, but they do not replace DriverLoad telemetry or operating system vulnerable driver protections.
 
 ### Linux Configurations
+
 
 #### `sysmonconfig-Linux-advanced.xml`
 
@@ -109,6 +111,7 @@ Detection coverage includes:
 
 The configuration provides a practical telemetry baseline for SIEM integration and security investigations. Organizations should validate compatibility, event volume, and detection coverage before production deployment. 
 It complements existing EDR, auditd, osquery, and other Linux security controls rather than replacing them.
+
 
 #### `sysmonconfig-Linux.xml`
 
@@ -151,6 +154,7 @@ Before deploying at scale, review and tune for:
 - known high-volume internal tooling
 
 The public Windows configurations intentionally avoid private or organization-specific exclusions. Add your own environment-specific exclusions only after validating the source of noise.
+
 
 ## Usage
 
