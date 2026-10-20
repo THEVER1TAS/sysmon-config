@@ -79,7 +79,7 @@
     - Beaconing detection: stats count by Image, DestinationIp per 5m time buckets
 -->
 
-<Sysmon schemaversion="4.81">
+<Sysmon schemaversion="4.90">
   <HashAlgorithms>sha256</HashAlgorithms>
 
   <EventFiltering>
