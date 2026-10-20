@@ -4,7 +4,7 @@
 
   MAINTAINED BY:  @THE_VER1TAS
   CONTRIBUTIONS:  @tazwake — Linux detection logic and configuration improvements
-  LAST CHANGE:    10-16-2026
+  LAST CHANGE:    10-20-2026
   VERSION:        2.0 — triple-checked audit pass; 13 bugs corrected from v1.0
 
   CORRECTIONS IN THIS VERSION:
@@ -1011,7 +1011,7 @@
         <!-- /dev/shm executable without extension — common memfd staging -->
         <Rule name="T1074.001,ShmNoExtension" groupRelation="and">
           <TargetFilename condition="begin with">/dev/shm/</TargetFilename>
-          <TargetFilename condition="not contains">.</TargetFilename>
+          <TargetFilename condition="excludes">.</TargetFilename>
         </Rule>
         <Rule name="T1074.001,VarTmpStaging" groupRelation="and">
           <TargetFilename condition="begin with">/var/tmp/</TargetFilename>
