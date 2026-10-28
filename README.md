@@ -24,7 +24,7 @@ The Windows configuration files are intended for **Sysmon 15.0 and newer**.
 Current Windows schema version:
 
 ```text
-4.90
+4.91
 ```
 
 Minimum supported Sysmon versions may vary by configuration. Review the XML header comments before deployment.
