@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![VER1TAS Sysmon Configuration](./images/ver1tas_sysmon_command_center.png)
+![VER1TAS Sysmon Configuration](./images/VER1TAS_Sysmon_Command_Center.png)
 
 </div>
 
