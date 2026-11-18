@@ -1,6 +1,10 @@
 # sysmon-config | Advanced Sysmon Configuration Repository
 
-![VER1TAS Sysmon Configuration](images/ver1tas_sysmon_command_center.png)
+<div align="center">
+
+![VER1TAS Sysmon Configuration](./images/ver1tas_sysmon_command_center.png)
+
+</div>
 
 This repository contains advanced Microsoft Sysmon configurations focused on practical endpoint telemetry, detection engineering, threat hunting, and SIEM enrichment.
 
