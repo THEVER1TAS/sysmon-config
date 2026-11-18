@@ -1,5 +1,7 @@
 # sysmon-config | Advanced Sysmon Configuration Repository
 
+![VER1TAS Sysmon Configuration](images/ver1tas_sysmon_command_center.png)
+
 This repository contains advanced Microsoft Sysmon configurations focused on practical endpoint telemetry, detection engineering, threat hunting, and SIEM enrichment.
 
 This project started as a fork and extension of the excellent community work from [@SwiftOnSecurity](https://twitter.com/SwiftOnSecurity), [Neo23x0 / Nextron Systems](https://github.com/Neo23x0/sysmon-config), and other contributors in the Sysmon community. My goal with this fork is to continue building on that work by adding current detection logic, practical tuning, and configurations that can help organizations improve visibility across Windows and Linux endpoints.
